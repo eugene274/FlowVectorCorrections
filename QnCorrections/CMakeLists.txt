@@ -3,11 +3,12 @@ cmake_minimum_required(VERSION 2.8)
 
 project(FLOWVECTOR)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake/)
 
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist Tree Net)
 
 include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
+
+include(${ROOT_USE_FILE})
 add_definitions(${ROOT_CXX_FLAGS})
 
 
@@ -65,3 +66,19 @@ ROOT_GENERATE_DICTIONARY(G__FlowVector ${HEADERS} LINKDEF QnLinkDef.h)
 add_library(FlowVector SHARED ${SOURCES} G__FlowVector.cxx)
 target_link_libraries(FlowVector ${ROOT_LIBRARIES})
 
+INSTALL (
+  TARGETS FlowVector
+  LIBRARY DESTINATION ${PROJECT_ROOT_DIR}/lib
+)
+
+INSTALL (
+  FILES ${HEADERS}
+  DESTINATION ${PROJECT_ROOT_INCLUDE_DIR}
+)
+
+INSTALL (
+  FILES 
+    ${CMAKE_CURRENT_BINARY_DIR}/libFlowVector_rdict.pcm
+    ${CMAKE_CURRENT_BINARY_DIR}/libFlowVector.rootmap
+  DESTINATION ${PROJECT_ROOT_DIR}/lib
+)
